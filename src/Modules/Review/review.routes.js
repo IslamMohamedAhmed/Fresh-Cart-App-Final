@@ -12,7 +12,7 @@ reviewRouter.route('/').get(getAllReviews).post(validateToken, validateInputs(va
     findById({ model: productModel, foreignKey: 'product', from: 'body', necessary: true, objectName: 'product' }), addReview);
 reviewRouter.route('/:id').delete(validateToken, validateInputs(validateParamsId),
     findById({ model: reviewModel, foreignKey: 'id', from: 'params', necessary: true, objectName: 'review' }), deleteReview)
-    .put(validateInputs(validateUpdateReview),
+    .put(validateToken, validateInputs(validateUpdateReview),
         findById({ model: reviewModel, foreignKey: 'id', from: 'params', necessary: true, objectName: 'review' }), updateReview)
     .get(validateInputs(validateParamsId),
         findById({ model: reviewModel, foreignKey: 'id', from: 'params', necessary: true, objectName: 'review' }), getSingleReview);

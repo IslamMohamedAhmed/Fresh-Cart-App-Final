@@ -14,7 +14,7 @@ const validateUpdateReview = joi.object({
 
 const validateParamsId = joi.object({
     id: joi.string().required().length(24).hex()
-});
+}).unknown(true);
 
 
 
