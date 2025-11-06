@@ -1,6 +1,7 @@
 import { cartModel } from "../../../Database/Models/cart.model.js";
 import { orderModel } from "../../../Database/Models/order.model.js";
 import { productModel } from "../../../Database/Models/product.model.js";
+import { userModel } from "../../../Database/Models/user.model.js";
 import { catchError } from "../../Middlewares/catchError.js";
 import { appError } from "../../Utils/appError.js";
 import Stripe from "stripe";
@@ -8,13 +9,24 @@ import Stripe from "stripe";
 const createOrder = catchError(async (req, res, next) => {
     let tokenUser = req.headers['user-info'];
     let cartExist = await cartModel.findOne({ user: tokenUser.id });
+    let user = await userModel.findById(tokenUser.id);
+    let addresses = user.addresses;
     if (!cartExist) return next(new appError('user cart is empty!!', 409));
+    if(!req.body.shippingAddress) {
+        return next(new appError('shipping address is required!!', 400));
+    }
+    
+    let address = addresses.find(addr => addr._id.toString() === req.body.shippingAddress);
+    
+    if(!address) {
+        return next(new appError('invalid shipping address!!', 400));
+    }
     let totalOrderPrice = cartExist.totalPriceAfterDiscount ? cartExist.totalPriceAfterDiscount : cartExist.totalPrice;
     let order = new orderModel({
         user: tokenUser.id,
         orderItems: cartExist.cartItems,
         totalOrderPrice,
-        shippingAddress: req.body.shippingAddress
+        shippingAddress: address
     });
 
     await order.save();

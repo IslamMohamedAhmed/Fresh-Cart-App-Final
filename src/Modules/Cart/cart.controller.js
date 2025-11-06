@@ -63,24 +63,31 @@ const addToCart = catchError(async (req, res, next) => {
 const removeFromCart = catchError(async (req, res, next) => {
     let tokenUser = req.headers['user-info'];
     let cart = await cartModel.findOne({ user: tokenUser.id });
-    let productExist = cart.cartItems.find(item => item._id.equals(req.params.id));
-    if (productExist) {
-        let result = await cartModel.findOneAndUpdate({ user: tokenUser.id }, { $pull: { cartItems: { _id: req.params.id } } }, { new: true });
-        result.totalPrice = result.cartItems.reduce((acc, item) => {
-            return acc + (item.quantity * item.price);
-        }, 0);
-        await result.save();
-        res.json({ message: 'success', result });
+    if(cart){
+
+        let productExist = cart.cartItems.find(item => item._id.equals(req.params.id));
+        if (productExist) {
+            let result = await cartModel.findOneAndUpdate({ user: tokenUser.id }, { $pull: { cartItems: { _id: req.params.id } } }, { new: true });
+            result.totalPrice = result.cartItems.reduce((acc, item) => {
+                return acc + (item.quantity * item.price);
+            }, 0);
+            await result.save();
+            res.json({ message: 'success', result });
+        }
+        else {
+            next(new appError('product is not found in your cart!!', 404));
+        }
     }
     else {
-        next(new appError('product is not found in your cart!!', 404));
+        next(new appError('your cart is empty!!', 404));
     }
 });
 
 const updateQuantity = catchError(async (req, res, next) => {
     let tokenUser = req.headers['user-info'];
     let cart = await cartModel.findOne({ user: tokenUser.id });
-    let productExist = cart.cartItems.find(item => item.product.equals(req.params.id));
+    if(cart){
+  let productExist = cart.cartItems.find(item => item.product.equals(req.params.id));
     if (productExist) {
         let product = await productModel.findById(productExist.product);
         if (req.body.quantity > product.quantity) {
@@ -102,6 +109,11 @@ const updateQuantity = catchError(async (req, res, next) => {
     else {
         next(new appError('product is not found in your cart!!', 404));
     }
+    }
+    else {
+        next(new appError('your cart is empty!!', 404));
+    }
+  
 
 });
 
