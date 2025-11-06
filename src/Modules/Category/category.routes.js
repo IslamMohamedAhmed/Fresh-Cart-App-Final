@@ -2,7 +2,7 @@ import express from "express";
 import { addCategory, deleteCategory, getAllCategories, getSingleCategory, updateCategory } from "./category.controller.js";
 import { validateInputs } from "../../Middlewares/validateInputs.js";
 import { validateAddCategory, validateParamsId, validateUpdateCategory } from "./category.validation.js";
-import { uploadSingle } from "../../services/uploadFile/fileUpload.js";
+import { uploadSingle } from "../../Services/uploadFile/fileUpload.js";
 import productRouter from "../Product/product.routes.js";
 import subCategoryRouter from "../SubCategory/subcategory.routes.js";
 import { validateToken } from "../../Middlewares/validateToken.js";

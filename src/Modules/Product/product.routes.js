@@ -1,6 +1,6 @@
 import express from "express";
 import { validateInputs } from "../../Middlewares/validateInputs.js";
-import { uploadFields } from "../../services/uploadFile/fileUpload.js";
+import { uploadFields } from "../../Services/uploadFile/fileUpload.js";
 import { addProduct, deleteProduct, getAllProducts, getSingleProduct, updateProduct } from "./product.controller.js";
 import { validateAddProduct, validateParamsId, validateUpdateProduct } from "./product.validation.js";
 import { validateToken } from "../../Middlewares/validateToken.js";

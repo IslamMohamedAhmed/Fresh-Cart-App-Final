@@ -1,6 +1,6 @@
 import express from "express";
 import { validateInputs } from "../../Middlewares/validateInputs.js";
-import { uploadSingle } from "../../services/uploadFile/fileUpload.js";
+import { uploadSingle } from "../../Services/uploadFile/fileUpload.js";
 import { addBrand, deleteBrand, getAllBrands, getSingleBrand, updateBrand } from "./brand.controller.js";
 import { validateAddBrand, validateParamsId, validateUpdateBrand } from "./brand.validation.js";
 import productRouter from "../Product/product.routes.js";
