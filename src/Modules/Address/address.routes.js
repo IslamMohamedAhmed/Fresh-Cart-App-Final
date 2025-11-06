@@ -1,7 +1,7 @@
 import express from "express";
 import { validateInputs } from "../../Middlewares/validateInputs.js";
 import { validateToken } from "../../Middlewares/validateToken.js";
-import { addAddress, getAddresses, removeAddress, updateAddress } from "./Address.controller.js";
+import { addAddress, getAddresses, removeAddress, updateAddress } from "./address.controller.js";
 import { validateAddAddress, validateParamsId, validateUpdateAddress } from './address.validation.js';
 
 const addressRouter = express.Router();
