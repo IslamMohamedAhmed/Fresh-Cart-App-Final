@@ -9,7 +9,7 @@ import reviewRouter from './Review/review.routes.js';
 import { invalidPathHandler } from '../Middlewares/invalidPathHandler.js';
 import { globalErrorHandler } from '../Middlewares/globalErrorHandler.js';
 import wishlistRouter from './Wishlist/wishlist.routes.js';
-import addressRouter from './Address/Address.routes.js';
+import addressRouter from './Address/address.routes.js';
 import couponRouter from './Coupon/coupon.routes.js';
 import cartRouter from './Cart/cart.routes.js';
 import orderRouter from './Order/order.routes.js';
