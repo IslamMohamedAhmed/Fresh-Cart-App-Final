@@ -1,13 +1,15 @@
 import { userModel } from "../../../Database/Models/user.model.js";
 import { catchError } from "../../Middlewares/catchError.js";
-import { sendEmail } from "../../Services/email/sendEmail.js";
 import jwt from 'jsonwebtoken';
 import { appError } from "../../Utils/appError.js";
 import bcrypt from 'bcrypt';
+import { resendEmail } from "../../Services/email/resend.js";
+
+
 const signup = catchError(async (req, res) => {
     req.body.passwordLatestChangeTime = Date.now();
     await userModel.create(req.body);
-    sendEmail(req.body.email);
+    resendEmail(req.body.email);
     res.json({ message: 'success, A verification has been sent to your email account please verify your email to be able to sign in!!' });
 });
 

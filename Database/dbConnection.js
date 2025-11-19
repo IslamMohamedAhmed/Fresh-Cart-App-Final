@@ -8,5 +8,3 @@ export function connectDb() {
         console.log(err);
     }
 }
-
-
