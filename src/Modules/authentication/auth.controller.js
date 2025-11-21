@@ -3,7 +3,7 @@ import { catchError } from "../../Middlewares/catchError.js";
 import jwt from 'jsonwebtoken';
 import { appError } from "../../Utils/appError.js";
 import bcrypt from 'bcrypt';
-import { sendEmail } from "../../Services/email/sendEmail.js";
+import  sendEmail  from "../../Services/email/sendGrid.js";
 
 
 const signup = catchError(async (req, res) => {
