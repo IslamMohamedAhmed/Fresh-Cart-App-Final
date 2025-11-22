@@ -5,7 +5,8 @@ import sgMail from '@sendgrid/mail';
 
 async function sendEmail(to) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    let token = jwt.sign({ to }, process.env.JWT_KEY_SIGNUP);
+    const email = to;
+    let token = jwt.sign({ email }, process.env.JWT_KEY_SIGNUP);
     const msg = {
         to,
         from: process.env.FROM_EMAIL,

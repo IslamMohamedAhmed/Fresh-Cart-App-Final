@@ -3,13 +3,13 @@ import { catchError } from "../../Middlewares/catchError.js";
 import jwt from 'jsonwebtoken';
 import { appError } from "../../Utils/appError.js";
 import bcrypt from 'bcrypt';
-import  sendEmail  from "../../Services/email/sendGrid.js";
+import sendEmail from "../../Services/email/sendGrid.js";
 
 
 const signup = catchError(async (req, res) => {
     req.body.passwordLatestChangeTime = Date.now();
-    await userModel.create(req.body);
     await sendEmail(req.body.email);
+    await userModel.create(req.body);
     res.json({ message: 'success, A verification has been sent to your email account please verify your email to be able to sign in!!' });
 });
 
