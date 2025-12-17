@@ -22,7 +22,9 @@ const table = new mongoose.Schema({
 }, { timestamps: true });
 
 table.post('init', (doc) => {
-    doc.image = process.env.BASE_URL + "/categories/images/" + doc.image;
+    if (doc.image) {
+        doc.image = process.env.BASE_URL + "/categories/images/" + doc.image;
+    }
 });
 
 export const categoryModel = mongoose.model('categories', table);

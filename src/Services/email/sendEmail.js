@@ -26,6 +26,6 @@ export const sendEmail = async (email) => {
             html: createTemplate(token), // plain‑text body
         });
 
-        console.log("Message sent:", info.messageId);
+        
     })();
 }

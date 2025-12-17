@@ -5,6 +5,7 @@ import { userModel } from "../../../Database/Models/user.model.js";
 import { catchError } from "../../Middlewares/catchError.js";
 import { appError } from "../../Utils/appError.js";
 import Stripe from "stripe";
+import { QueryBuilder } from "../../Utils/queryBuilder.js";
 
 const createOrder = catchError(async (req, res, next) => {
     let tokenUser = req.headers['user-info'];
@@ -12,13 +13,13 @@ const createOrder = catchError(async (req, res, next) => {
     let user = await userModel.findById(tokenUser.id);
     let addresses = user.addresses;
     if (!cartExist) return next(new appError('user cart is empty!!', 409));
-    if(!req.body.shippingAddress) {
+    if (!req.body.shippingAddress) {
         return next(new appError('shipping address is required!!', 400));
     }
-    
+
     let address = addresses.find(addr => addr._id.toString() === req.body.shippingAddress);
-    
-    if(!address) {
+
+    if (!address) {
         return next(new appError('invalid shipping address!!', 400));
     }
     let totalOrderPrice = cartExist.totalPriceAfterDiscount ? cartExist.totalPriceAfterDiscount : cartExist.totalPrice;
@@ -59,18 +60,28 @@ const getUserOrders = catchError(async (req, res, next) => {
 });
 
 const getAllOrders = catchError(async (req, res, next) => {
-    let filterObj = {};
+    let filter = {};
     if (req.params.user) {
-        filterObj.user = req.params.user;
+        filter.user = req.params.user;
     }
-    let orders = await orderModel.find(filterObj);
-    res.json({ message: 'success', orders });
+    let queryBuilder = new QueryBuilder(orderModel.find(filter), req.query, []);
+    queryBuilder.filter().search().buildQuery().sort().fields();
+    await queryBuilder.pagination();
+     let orders = await queryBuilder.mongooseQuery;
+    res.json({
+        message: "success",
+        page: queryBuilder.pageNumber,
+        totalPages: queryBuilder.totalPages,
+        totalItems: queryBuilder.totalItems,
+        pageLimit: queryBuilder.pageLimit,
+        data: orders                        // The actual data for this page
+    });
 });
 
 
 const addCheckoutSession = catchError(async (req, res, next) => {
     let tokenUser = req.headers['user-info'];
-    console.log(tokenUser.id);
+    
     let cartExist = await cartModel.findOne({ user: tokenUser.id });
     if (!cartExist) return next(new appError('user cart is empty!!', 409));
     let totalOrderPrice = cartExist.totalPriceAfterDiscount ? cartExist.totalPriceAfterDiscount : cartExist.totalPrice;

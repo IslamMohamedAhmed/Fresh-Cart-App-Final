@@ -57,8 +57,8 @@ const getAllReviews = catchError(async (req, res, next) => {
     let filter = {};
     if (req.params.product) filter.product = req.params.product;
     if (req.params.user) filter.createdBy = req.params.user;
-    let queryBuilder = new QueryBuilder(reviewModel.find(filter), req.query);
-    queryBuilder.filter().sort().fields().search();
+    let queryBuilder = new QueryBuilder(reviewModel.find(filter), req.query, ['text']);
+    queryBuilder.filter().search().buildQuery().sort().fields();
     await queryBuilder.pagination();
     let reviews = await queryBuilder.mongooseQuery;
     res.json({

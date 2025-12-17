@@ -77,12 +77,16 @@ table.virtual('productReviews', {
     foreignField: 'product'
 });
 table.pre('findOne', function () {
-    this.populate('productReviews','text -product');
+    this.populate('productReviews', 'text -product');
 });
 
 table.post('init', (doc) => {
-    doc.imageCover = process.env.BASE_URL + "/products/images/" + doc.imageCover;
-    doc.images = doc.images.map(img => process.env.BASE_URL + "/products/images/" + img);
+    if (doc.imageCover) {
+        doc.imageCover = process.env.BASE_URL + "/products/images/" + doc.imageCover;
+    }
+    if (doc.images) {
+        doc.images = doc.images.map(img => process.env.BASE_URL + "/products/images/" + img);
+    }
 });
 
 export const productModel = mongoose.model('products', table);

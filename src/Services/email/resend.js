@@ -18,7 +18,7 @@ export const resendEmail = async (email) => {
             throw new Error(result.error.message);
         }
 
-        console.log("Email sent successfully:", result.data);
+        
         return result;
         
     } catch (error) {

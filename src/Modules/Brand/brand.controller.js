@@ -51,8 +51,8 @@ const deleteBrand = catchError(async (req, res, next) => {
 const getAllBrands = catchError(async (req, res, next) => {
     let filter = {};
     if (req.params.user) filter.createdBy = req.params.user;
-    let queryBuilder = new QueryBuilder(brandModel.find(filter), req.query);
-    queryBuilder.filter().sort().fields().search();
+    let queryBuilder = new QueryBuilder(brandModel.find(filter), req.query, ['name', 'slug']);
+    queryBuilder.filter().search().buildQuery().sort().fields();
     await queryBuilder.pagination();
     let brands = await queryBuilder.mongooseQuery;
     res.json({

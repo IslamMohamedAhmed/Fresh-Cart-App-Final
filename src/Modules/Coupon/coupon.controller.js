@@ -1,6 +1,7 @@
 import { couponModel } from "../../../Database/Models/coupon.model.js";
 import { catchError } from "../../Middlewares/catchError.js";
 import { appError } from "../../Utils/appError.js";
+import { QueryBuilder } from "../../Utils/queryBuilder.js";
 
 
 const addCoupon = catchError(async (req, res, next) => {
@@ -61,8 +62,18 @@ const deleteCoupon = catchError(async (req, res, next) => {
 });
 
 const getAllCoupons = catchError(async (req, res, next) => {
-    let coupons = await couponModel.find();
-    res.json({ message: "success", coupons });
+    let queryBuilder = new QueryBuilder(couponModel.find(filter), req.query, ['code', 'expiresAt']);
+    queryBuilder.filter().search().buildQuery().sort().fields();
+    await queryBuilder.pagination();
+    let coupons = await queryBuilder.mongooseQuery;
+    res.json({
+        message: "success",
+        page: queryBuilder.pageNumber,
+        totalPages: queryBuilder.totalPages,
+        totalItems: queryBuilder.totalItems,
+        pageLimit: queryBuilder.pageLimit,
+        data: coupons                        // The actual data for this page
+    });
 });
 
 

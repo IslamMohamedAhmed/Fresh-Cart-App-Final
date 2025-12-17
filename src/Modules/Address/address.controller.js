@@ -34,7 +34,7 @@ const removeAddress = catchError(async (req, res, next) => {
     let tokenUser = req.headers['user-info'];
     let user = await userModel.findById(tokenUser.id);
     let elements = [...user.addresses].filter(item => item._id == req.params.id);
-    console.log(elements);
+    
     if (elements.length > 0) {
         let result = await userModel.findByIdAndUpdate(tokenUser.id, { $pull: { addresses: { _id: req.params.id } } }, { new: true });
         res.json({ message: 'success', addresses: result.addresses });

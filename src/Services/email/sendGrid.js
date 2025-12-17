@@ -17,7 +17,7 @@ async function sendEmail(to) {
 
     try {
         const result = await sgMail.send(msg);
-        console.log('Email sent ✔️');
+        
         return result;
     } catch (error) {
         console.error('SendGrid Error ❌', error);

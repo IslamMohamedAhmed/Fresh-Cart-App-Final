@@ -54,8 +54,8 @@ const deleteCategory = catchError(async (req, res, next) => {
 const getAllCategories = catchError(async (req, res, next) => {
     let filter = {};
     if (req.params.user) filter.createdBy = req.params.user;
-    let queryBuilder = new QueryBuilder(categoryModel.find(filter), req.query);
-    queryBuilder.filter().sort().fields().search();
+    let queryBuilder = new QueryBuilder(categoryModel.find(filter), req.query, ['name', 'slug']);
+    queryBuilder.filter().search().buildQuery().sort().fields();
     await queryBuilder.pagination();
     let categories = await queryBuilder.mongooseQuery;
     res.json({

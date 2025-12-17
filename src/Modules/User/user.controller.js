@@ -28,8 +28,8 @@ const deleteUser = catchError(async (req, res, next) => {
 });
 
 const getAllUsers = catchError(async (req, res, next) => {
-    let queryBuilder = new QueryBuilder(userModel.find(), req.query);
-    queryBuilder.filter().sort().fields().search();
+    let queryBuilder = new QueryBuilder(userModel.find(), req.query, ['name', 'email', 'role']);
+    queryBuilder.filter().search().buildQuery().sort().fields();
     await queryBuilder.pagination();
     let users = await queryBuilder.mongooseQuery;
     res.json({
